@@ -13,7 +13,9 @@ protected:
 	void setSpeed(int speed);
 
 public:
-	virtual std::string getVehicleType() const;
+	virtual ~Vehicle();
+
+	virtual std::string getVehicleType() const = 0;
 
 	virtual bool isGroundVehicle() const;
 	virtual bool isAirVehicle() const;

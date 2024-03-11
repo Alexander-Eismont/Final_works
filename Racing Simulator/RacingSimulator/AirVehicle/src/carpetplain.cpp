@@ -1,4 +1,6 @@
-#include "../include/carpetplain.h"
+#include "carpetplain.h"
+#include "racingexception.h"
+#include <iostream>
 
 CarpetPlain::CarpetPlain()
 	:AirVehicle()
@@ -27,25 +29,39 @@ std::string CarpetPlain::getVehicleType() const
 */
 double CarpetPlain::totalSpendTime(int distance)
 {
-	const double speed = this->getSpeed();
-	const std::vector<double>& distanceReduction = getDistanceReduction();
+	double spendTime;
 
-	double valueInPercent;
+	try
+	{
+		const double speed = this->getSpeed();
 
-	if (distance < 1000)
-		valueInPercent = distanceReduction[0];
-	else if (distance < 5000)
-		valueInPercent = distanceReduction[1];
-	else if (distance < 10000)
-		valueInPercent = distanceReduction[2];
-	else
-		valueInPercent = distanceReduction[3];
+		if (speed == 0)
+			throw RacingException("Cannot division by zero");
 
-	double coefficient = (100 - valueInPercent) / 100;
+		const std::vector<double>& distanceReduction = getDistanceReduction();
 
-	double totalSpendTime = (static_cast<double>(distance) * coefficient) / speed;
+		double valueInPercent;
 
-	return totalSpendTime;
+		if (distance < 1000)
+			valueInPercent = distanceReduction[0];
+		else if (distance < 5000)
+			valueInPercent = distanceReduction[1];
+		else if (distance < 10000)
+			valueInPercent = distanceReduction[2];
+		else
+			valueInPercent = distanceReduction[3];
+
+		double coefficient = (100 - valueInPercent) / 100;
+
+		spendTime = (static_cast<double>(distance) * coefficient) / speed;
+	}
+	catch (const RacingException& err)
+	{
+		std::cerr << err.what() << "\n";
+		CarpetPlain::totalSpendTime(distance);
+	}
+
+	return spendTime;
 }
 
 bool CarpetPlain::isGroundVehicle() const { return false; }

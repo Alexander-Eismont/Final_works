@@ -1,4 +1,6 @@
-#include "../include/airvehicle.h"
+#include "airvehicle.h"
+#include "racingexception.h"
+#include <iostream>
 
 AirVehicle::AirVehicle()
 	: Vehicle()
@@ -6,6 +8,8 @@ AirVehicle::AirVehicle()
 	setVehicleType("Air");
 	setDistanceReduction({ 0 });
 }
+
+AirVehicle::~AirVehicle() {}
 
 std::string AirVehicle::getVehicleType() const
 {
@@ -24,22 +28,36 @@ std::vector<double> AirVehicle::getDistanceReduction() const
 
 double AirVehicle::totalSpendTime(int distance)
 {
-	double speed = this->getSpeed();
-	const std::vector<double>& distanceReduction = getDistanceReduction();
+	double spendTime = 0;
 
-	int valueInPercent = distanceReduction[0];
+	try
+	{
+		double speed = this->getSpeed();
+	
+		if (speed == 0)
+			throw RacingException("Cannot division by zero");
 
-	/*
-	* перевод сокращения дистанции из процентов в коэффициент.
-	(если дистанция сокращается на 5 процентов, то коэффициент будет 0.95)
-	* converting distance reduction from percentage to coefficient
-	(if the distance is reduced by 5 percent, the coefficient will be 0.95)
-	*/
-	double coefficient = (100 - valueInPercent) / 100;
+		const std::vector<double>& distanceReduction = getDistanceReduction();
 
-	double totalSpendTime = (static_cast<double>(distance) * coefficient) / speed;
+		int valueInPercent = distanceReduction[0];
 
-	return totalSpendTime;
+		/*
+		* перевод сокращения дистанции из процентов в коэффициент.
+		(если дистанция сокращается на 5 процентов, то коэффициент будет 0.95)
+		* converting distance reduction from percentage to coefficient
+		(if the distance is reduced by 5 percent, the coefficient will be 0.95)
+		*/
+		double coefficient = (100 - valueInPercent) / 100;
+
+		spendTime = (static_cast<double>(distance) * coefficient) / speed;
+	}
+	catch (const RacingException& err)
+	{
+		std::cerr << err.what() << "\n";
+		AirVehicle::totalSpendTime(distance);
+	}
+
+	return spendTime;
 }
 
 bool AirVehicle::isGroundVehicle() const { return false; }

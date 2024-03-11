@@ -1,10 +1,11 @@
 #include "race.h"
-#include "../include/race.h"
-#include "../../RacingException/include/racingexception.h"
+#include "race.h"
+#include "racingexception.h"
 
 #include <algorithm>
 #include <iostream>
 #include <random>
+#include <format>
 
 void Race::welcomeMessage()
 {
@@ -112,8 +113,8 @@ void Race::shuffleVehicles(std::vector<Vehicle*>& allVehicles)
 // displaying a message about vehicle registration and distance
 void Race::registrationMessage(const std::string& raceType, const int distance)
 {
-	std::cout << "Registrate the vehicle on the " << raceType <<
-		" race! Distance: " << distance << "\n";
+	std::cout << std::format("Registrate the vehicle on the {} race! Distance: "
+							 "{}\n", raceType, distance);
 }
 
 // вывод списка ТС и сообщения о выборе пунктов списка

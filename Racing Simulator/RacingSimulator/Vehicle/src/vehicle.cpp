@@ -1,10 +1,14 @@
-#include "../include/vehicle.h"
+#include "vehicle.h"
+#include "racingexception.h"
+
+#include <iostream>
 
 Vehicle::Vehicle()
-{
-	setVehicleType("Vehicle");
-	setSpeed(1);
-}
+	: m_vehicleType{ "Vehicle" }
+	, m_speed(1)
+{}
+
+Vehicle::~Vehicle() {}
 
 std::string Vehicle::getVehicleType() const { return m_vehicleType; }
 
@@ -23,5 +27,16 @@ bool Vehicle::isAirVehicle() const { return false; }
 
 double Vehicle::totalSpendTime(int distance)
 {
-	return static_cast<double>(distance) / getSpeed();
+	try
+	{
+		if (m_speed != 0)
+			return static_cast<double>(distance) / getSpeed();
+		else
+			throw RacingException("Cannot division by zero");
+	}
+	catch (const RacingException& err)
+	{
+		std::cerr << err.what() << "\n";
+		return Vehicle::totalSpendTime(distance);
+	}
 }

@@ -1,4 +1,4 @@
-#include "../include/fastcamel.h"
+#include "fastcamel.h"
 
 FastCamel::FastCamel()
 	: GroundVehicle()

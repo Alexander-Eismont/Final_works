@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Vehicle/include/vehicle.h"
+#include "vehicle.h"
 
 #include <string>
 #include <vector>

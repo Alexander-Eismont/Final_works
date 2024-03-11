@@ -1,4 +1,4 @@
-#include "../include/allterrainboots.h"
+#include "allterrainboots.h"
 
 AllTerrainBoots::AllTerrainBoots()
 	: GroundVehicle()

@@ -1,4 +1,4 @@
-#include "../include/camel.h"
+#include "camel.h"
 
 Camel::Camel()
 	: GroundVehicle()

@@ -1,4 +1,6 @@
-#include "../include/broom.h"
+#include "broom.h"
+#include "racingexception.h"
+#include <iostream>
 
 Broom::Broom()
 	:AirVehicle()
@@ -22,15 +24,29 @@ conventional unit of distance
 */
 double Broom::totalSpendTime(int distance)
 {
-	const double speed = this->getSpeed();
+	double spendTime = 0;
 
-	int valueInPercent = distance / 1000;
+	try
+	{
+		const double speed = this->getSpeed();
 
-	double coefficient = (100 - static_cast<double>(valueInPercent)) / 100;
+		if (speed == 0)
+			throw RacingException("Cannot division by zero");
 
-	double totalSpendTime = (static_cast<double>(distance) * coefficient) / speed;
+		int valueInPercent = distance / 1000;
 
-	return totalSpendTime;
+		double coefficient = (100 - static_cast<double>(valueInPercent)) / 100;
+
+		double totalSpendTime = (static_cast<double>(distance) * coefficient) / speed;
+	}
+	catch (const RacingException& err)
+	{
+		std::cerr << err.what() << "\n";
+		Broom::totalSpendTime(distance);
+	}
+
+
+	return spendTime;
 }
 
 bool Broom::isGroundVehicle() const { return false; }

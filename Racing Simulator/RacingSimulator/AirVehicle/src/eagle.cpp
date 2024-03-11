@@ -1,4 +1,6 @@
-#include "../include/eagle.h"
+#include "eagle.h"
+#include "racingexception.h"
+#include <iostream>
 
 Eagle::Eagle()
 	:AirVehicle()
@@ -19,16 +21,30 @@ std::string Eagle::getVehicleType() const
 */
 double Eagle::totalSpendTime(int distance)
 {
-	const double speed = this->getSpeed();
-	const std::vector<double>& distanceReduction = getDistanceReduction();
+	double spendTime = 0;
 
-	int valueInPercent = distanceReduction[0];
+	try
+	{
+		const double speed = this->getSpeed();
+		
+		if (speed == 0)
+			throw RacingException("Cannot division by zero");
 
-	double coefficient = (100 - static_cast<double>(valueInPercent)) / 100;
+		const std::vector<double>& distanceReduction = getDistanceReduction();
 
-	double totalSpendTime = (static_cast<double>(distance) * coefficient) / speed;
+		int valueInPercent = distanceReduction[0];
 
-	return totalSpendTime;
+		double coefficient = (100 - static_cast<double>(valueInPercent)) / 100;
+
+		spendTime = (static_cast<double>(distance) * coefficient) / speed;
+	}
+	catch (const RacingException& err)
+	{
+		std::cerr << err.what() << "\n";
+		Eagle::totalSpendTime(distance);
+	}
+
+	return spendTime;
 }
 
 bool Eagle::isGroundVehicle() const { return false; }

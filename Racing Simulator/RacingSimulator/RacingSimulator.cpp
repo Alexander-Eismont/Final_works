@@ -1,13 +1,12 @@
-#include "RacingException/include/racingexception.h"
-#include "Race/include/race.h"
-
-#include "../../GroundVehicle/include/allterrainboots.h"
-#include "../../GroundVehicle/include/camel.h"
-#include "../../GroundVehicle/include/centaur.h"
-#include "../../GroundVehicle/include/fastcamel.h"
-#include "../../AirVehicle/include/broom.h"
-#include "../../AirVehicle/include/carpetplain.h"
-#include "../../AirVehicle/include/eagle.h"
+#include "racingexception.h"
+#include "race.h"
+#include "allterrainboots.h"
+#include "camel.h"
+#include "centaur.h"
+#include "fastcamel.h"
+#include "broom.h"
+#include "carpetplain.h"
+#include "eagle.h"
 
 #include <iostream>
 
@@ -36,37 +35,27 @@ void againOrExitMenu(Race& race, std::vector<Vehicle*>& allVehicles);
 
 int main()
 {
-	// создание объектов каждого вида ТС
-	// creation of objects of each type of vehicle
-	Camel camel;
-	FastCamel fastCamel;
-	Centaur centaur;
-	AllTerrainBoots allTerrainBoots;
-	CarpetPlain carpetPlain;
-	Eagle eagle;
-	Broom broom;
-
 	/*
+	* классы Vehicle, GroundVehicle, AirVehicle сделаны абстрактными и 
+	добавлены дефолтные деструкторы
 	* создается вектор указателей, т.к. если создать обычный вектор с
 	родительским классом без указателя, то будет срез объектов под
 	родительский класс и методы дочерних не будут учитываться. А объекты
 	добавляются по ссылке
+	* classes Vehicle, GroundVehicle, AirVehicle made abstract and 
+	default destructors added
 	* A vector of pointers is created, because If you create an ordinary
 	vector with the parental class without a pointer, there will be a cut of
 	objects for the parent class and the methods of subsidiaries will not be
 	taken into account. And objects are added by the link
 	*/
-	std::vector<Vehicle*> allVehicles;
-
-	// добавление каждого ТС в список всех
-	// adding each vehicle to the list of all
-	allVehicles.push_back(&camel);
-	allVehicles.push_back(&fastCamel);
-	allVehicles.push_back(&centaur);
-	allVehicles.push_back(&allTerrainBoots);
-	allVehicles.push_back(&carpetPlain);
-	allVehicles.push_back(&eagle);
-	allVehicles.push_back(&broom);
+	std::vector<Vehicle*> vehicles = { new Camel(),
+									   new FastCamel(),
+									   new Centaur(),
+									   new AllTerrainBoots(),
+									   new CarpetPlain(),
+									   new Eagle(),
+									   new Broom() };
 
 	// создание объекта гонки
 	// creating a race object
@@ -74,7 +63,7 @@ int main()
 
 	// основной запуск игры (все меню, регистрации и сама гонка)
 	// main launch of the game (all menus, registrations and the race itself)
-	startRace(race, allVehicles);
+	startRace(race, vehicles);
 
 	system("pause");
 
@@ -94,13 +83,13 @@ void startRace(Race& race, std::vector<Vehicle*>& allVehicles)
 	/*
 	* получение числа от пользователя, обозначающее тип гонки
 	если код равен 0, то выход из игры
-	* receiving a number from the user indicating the type of race; 
+	* receiving a number from the user indicating the type of race;
 	if the code is 0, then exit the game
 	*/
 	int raceTypeCode = getUserChoice(race, START_MENU_OPTIONS);
 	if (raceTypeCode == 0)
 		return;
-	
+
 	// по числу типа гонки, получение строкового типа гонки
 	// by number of race type, getting string race type
 	std::string raceType = race.chooseRaceType(raceTypeCode);
@@ -125,10 +114,10 @@ void startRace(Race& race, std::vector<Vehicle*>& allVehicles)
 
 	// меню для регистрации ТС на гонку
 	// menu for registering a vehicle for the race
-	registrationVehicleMenu(registeredVehicles, allVehicles, 
+	registrationVehicleMenu(registeredVehicles, allVehicles,
 							raceType, distance, race);
 
-	startOrRegistrationMenu(registeredVehicles, allVehicles, 
+	startOrRegistrationMenu(registeredVehicles, allVehicles,
 							race, raceType, distance);
 
 	againOrExitMenu(race, allVehicles);
@@ -138,8 +127,8 @@ void startRace(Race& race, std::vector<Vehicle*>& allVehicles)
 * получение числа выбора типа гонки и типа ТС с обработкой некорректного ввода
 сделано через рекурсию, чтобы избежать бесконечного цикла, пока пользователь
 не введет корректного число
-* obtaining the number for selecting the race type and vehicle type with 
-processing of incorrect input is done through recursion to avoid an 
+* obtaining the number for selecting the race type and vehicle type with
+processing of incorrect input is done through recursion to avoid an
 endless loop until the user enters the correct number
 */
 int getUserChoice(Race& race, int limit)
@@ -152,14 +141,14 @@ int getUserChoice(Race& race, int limit)
 		std::cin >> choice;
 
 		/*
-		* так как тип переменной для записи кода int, то если игрок ввел не 
-		число (std::cin.fail()) или если игрок ввел число, но после цифры 
+		* так как тип переменной для записи кода int, то если игрок ввел не
+		число (std::cin.fail()) или если игрок ввел число, но после цифры
 		при вводе стоит не знак переноса на новую строку, а какие-либо ещеэ
 		символы (std::cin.peek() != '\n'), то запускается обработка неверного
 		ввода
-		* since the type of the variable for writing the code is int, then if 
-		the player entered not a number (std::cin.fail()) or if the player 
-		entered a number, but after the number when entering there is not 
+		* since the type of the variable for writing the code is int, then if
+		the player entered not a number (std::cin.fail()) or if the player
+		entered a number, but after the number when entering there is not
 		a new line sign, but some other characters (std::cin.peek() != '\n'),
 		then processing of invalid input is started
 		*/
@@ -189,7 +178,7 @@ int getUserChoice(Race& race, int limit)
 *получение дистанции с обработкой некорректного ввода
 сделано через рекурсию, чтобы избежать бесконечного цикла, пока пользователь
 не введет корректное число
-* obtaining the distance with processing of incorrect input is done through 
+* obtaining the distance with processing of incorrect input is done through
 recursion to avoid an endless loop until the user enters the correct number
 */
 int getDistance(Race& race)
@@ -202,15 +191,15 @@ int getDistance(Race& race)
 		std::cin >> distance;
 
 		/*
-		* так как тип переменной для записи кода int, то если игрок ввел не 
-		число (std::cin.fail()) или если игрок ввел число, но после цифры 
+		* так как тип переменной для записи кода int, то если игрок ввел не
+		число (std::cin.fail()) или если игрок ввел число, но после цифры
 		при вводе стоит не знак переноса на новую строку, а какие-либо ещеэ
 		символы (std::cin.peek() != '\n'), то запускается обработка неверного
 		ввода
-		* since the type of the variable for writing the code is int, then if 
-		the player entered not a number (std::cin.fail()) or if the player 
+		* since the type of the variable for writing the code is int, then if
+		the player entered not a number (std::cin.fail()) or if the player
 		entered a number, but after the number when entering there is not a new
-		line sign, but some other characters (std::cin.peek() != '\n'), 
+		line sign, but some other characters (std::cin.peek() != '\n'),
 		then processing of invalid input is started
 		*/
 		if (std::cin.fail() || std::cin.peek() != '\n')
@@ -219,7 +208,7 @@ int getDistance(Race& race)
 		/*
 		* если игрок ввел число, но не в заданных рамках, то запускается
 		обработка данного события
-		* if the player entered a number, but not within the specified limits, 
+		* if the player entered a number, but not within the specified limits,
 		then processing of this event is triggered
 		*/
 		if (distance <= 0)
@@ -290,13 +279,13 @@ void startOrRegistrationMenu(std::vector<Vehicle*>& registeredVehicles,
 	/*
 	*пока не достигнуто необходимое количество ТС для гонки и пока пользователь
 	выбирает дорегистрацию ТС
-	* until the required number of vehicles for the race is reached and until 
+	* until the required number of vehicles for the race is reached and until
 	the user selects additional registration of the vehicle
 	*/
 	while (continueRegistration)
 	{
 		int limit;
-		race.clearTerminal(); 
+		race.clearTerminal();
 
 		if (registeredVehicles.size() < 2)
 		{
@@ -318,7 +307,7 @@ void startOrRegistrationMenu(std::vector<Vehicle*>& registeredVehicles,
 		switch (choice)
 		{
 		case(1):
-			registrationVehicleMenu(registeredVehicles, allVehicles, 
+			registrationVehicleMenu(registeredVehicles, allVehicles,
 									raceType, distance, race);
 			break;
 		case(2):

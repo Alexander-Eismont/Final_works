@@ -1,4 +1,4 @@
-#include "../include/centaur.h"
+#include "centaur.h"
 
 Centaur::Centaur()
 	: GroundVehicle()

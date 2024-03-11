@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Vehicle/include/vehicle.h"
+#include "vehicle.h"
 #include <vector>
 
 class GroundVehicle : public Vehicle
@@ -17,7 +17,9 @@ protected:
 	double totalSpendTime(int distance) override;
 
 public:
-	std::string getVehicleType() const override;
+	virtual ~GroundVehicle();
+
+	std::string getVehicleType() const override = 0;
 
 	bool isGroundVehicle() const override;
 	bool isAirVehicle() const override;

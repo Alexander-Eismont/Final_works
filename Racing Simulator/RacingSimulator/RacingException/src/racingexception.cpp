@@ -1,4 +1,4 @@
-#include "../include/racingexception.h"
+#include "racingexception.h"
 
 RacingException::RacingException(const std::string& error)
 	: m_error{ error }
